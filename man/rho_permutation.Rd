@@ -15,7 +15,7 @@ rho_permutation(spp_mat, trait_dist, n = min(2000, gamma(ncol(spp_mat) + 1)))
 \item{n}{number of random permutations to draw}
 }
 \value{
-a list with the observed rho, permutation samples and one side p-value
+a list with the observed rho, permutation samples and one side/double side p-value
 }
 \description{
 test for non-neutral factor using rho statistic and its permutation distribution

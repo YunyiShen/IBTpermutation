@@ -8,13 +8,11 @@ for(i in 1:nrow(trait_dist2)){
   for(j in 1:ncol(trait_dist2)){
     temp <- qdh_traits[c(i,j),-1]
     trait_dist2[i,j] <- 2-max(colSums(temp))
-    #if(!all(colSums(temp) < 2)){
-    #  trait_dist2[i,j] <- 0
-    #}
   }
 }
 
 
+set.seed(12345)
 par(mfrow = c(1,2))
 perm_sample1 <- rho_permutation(qdh_spp_mat, trait_dist1, n = 3000)
 plot(density(perm_sample1$permutations))

@@ -53,7 +53,7 @@ simple_sortingIBT <- function(spp_traits, island_feature, betas){
 #' @param spp_mat presence matrix, row as islands/sites, column as species
 #' @param trait_dist trait distance matrix between species, order should be the same as spp_mat's column
 #' @param n number of random permutations to draw
-#' @return a list with the observed rho, permutation samples and one side p-value
+#' @return a list with the observed rho, permutation samples and one side/double side p-value
 rho_permutation <- function(spp_mat, trait_dist, n = min(2000, gamma(ncol(spp_mat)+1))){
   spp_mat <- spp_mat==1
   permutations <- lapply(1:n, function(i,spp_mat){sample(1:ncol(spp_mat))},spp_mat)
@@ -73,7 +73,8 @@ rho_permutation <- function(spp_mat, trait_dist, n = min(2000, gamma(ncol(spp_ma
     #return(cor(temp[temp[,2]>1,1],temp[temp[,2]>1,2]))
     lm.fit(x = as.matrix(temp[temp[,2]>1,2]), temp[temp[,2]>1,1])$coefficients
   }, spp_mat, trait_dist)
-  return(list(observed = temp[1], permutations = temp[-1], p = min(mean(temp[-1]<temp[1]), mean(temp[-1]>temp[1]))))
+  p_val <- list(lower=mean(temp[-1]<temp[1]), double = mean(abs(temp[-1]-mean(temp[-1]))>abs(temp[1]-mean(temp[-1]))))
+  return(list(observed = temp[1], permutations = temp[-1], p = p_val))
 
 } # TODO: This is not a good implementation, just works, you gotta change this later, in C++ or get it better in R
 
