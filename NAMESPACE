@@ -1,0 +1,2 @@
+exportPattern("rho_permutation", "qdh_spp_mat","qdh_traits","simple_IBT","simple_sortingIBT")
+import("stats")
