@@ -48,6 +48,38 @@ simple_sortingIBT <- function(spp_traits, island_feature, betas){
 
 }
 
+#' simulating a simple IBT presence matrix with simple competition
+#' simulating a species presence matrix using logistic presence probability depends on distance and size of island, this routine determine species presence in sequence as species list, the later species will compete to all previous species based on trait distance
+#' @param spp_list list of species
+#' @param spp_dist distance of trait used to compete form
+#' @param island_feature a matrix with at least four columns, name of island, size of island, and distance to mainland, the last one is the target trait of an island, the distance between the required trait and the trait of the species determined the chance (together with size and distance)
+#' @param betas the coefficients for the logistics presence probability, intercept, size, distance and distance to previous of species
+#' @return a species presence matrix simulated using IBT, row as islands
+simple_competingIBT <- function(spp_list, spp_dist, island_feature, betas){
+  designmat <- apply(as.matrix(island_feature[,2:3]),2,
+                     function(w){(w-mean(w))/sd(w)})
+
+  spp_dist <- (spp_dist-mean(spp_dist))/sd(spp_dist)
+  XBs <- (cbind(1, designmat) %*% betas[-4] %*% t(rep(1, nrow(spp_dist)))) # linear predictor for only island features.
+  #browser()
+  presence_mat <- matrix(runif(nrow(spp_dist)*nrow(island_feature)), ncol = nrow(spp_dist))
+
+  presence_mat[,1] <- (presence_mat[,1] <= sigmoid(XBs[,1]))
+
+
+  for(j in 2:ncol(presence_mat)){
+    for(i in 1:nrow(presence_mat)){
+      the_p <-( XBs[i,j] + betas[4] * sum(presence_mat[i,1:(j-1)] * spp_dist[j,1:(j-1)])) |>
+        sigmoid()# a competing chain
+      presence_mat[i,j] <- (presence_mat[i,j] <= the_p)
+    }
+  }
+
+  rownames(presence_mat) <- island_feature[,1]
+  colnames(presence_mat) <- spp_list
+  return(presence_mat)
+}
+
 #' test for non-neutral factor using rho statistic and its permutation distribution
 #' rho statistics is the least square coefficient between richness and average trait distance change on an island from grand mean distance (when the island has more than one species), this routine also draw a permutation distribution by switching species labels to test for competition (more positive) and environmental sorting (more negative)
 #' @param spp_mat presence matrix, row as islands/sites, column as species

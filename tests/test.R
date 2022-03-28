@@ -52,3 +52,13 @@ abline(0,1, col = "red")
 abline(v = .05, col = "blue")
 
 
+
+
+betas_competing <- c(-1,.5,-.5, 1)
+spp_mat_competing <- simple_competingIBT(spp_list, as.matrix(dist(spp_trait[,2])), island_feature, betas_competing)
+perm_sample <- rho_permutation(spp_mat_competing, trait_dist)
+hist(perm_sample$permutations)
+abline(v = perm_sample$observed, col = "red")
+perm_sample$p
+
+
