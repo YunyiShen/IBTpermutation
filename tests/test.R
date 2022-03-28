@@ -1,10 +1,10 @@
 source("./R/IBTpermutation.R")
 
 set.seed(42)
-n_spp <- 15
+n_spp <- 20
 spp_list <- 1:n_spp
 
-n_island <- 25
+n_island <- 30
 island_feature <- data.frame(name = 1:n_island,
                              size = runif(n_island, -1,1),
                              dist = runif(n_island, -1,1))
@@ -34,7 +34,7 @@ for(i in 1:100){
 ps_h1 <- rep(NA, 100)
 
 for(i in 1:100){
-  betas_sorting <- c(-1,.5,-.5, -3)
+  betas_sorting <- c(-1,.5,-.5, 0)
   spp_mat_sorting <- simple_sortingIBT(spp_trait, island_feature2, betas_sorting)
   perm_sample <- rho_permutation(spp_mat_sorting, trait_dist)
   hist(perm_sample$permutations)
@@ -43,6 +43,7 @@ for(i in 1:100){
   quantile(perm_sample$permutations, c(.025,.975))
 }
 
+par(mfrow = c(1,2))
 plot(ecdf(ps_null), main = "p under H0", xlab = "p", ylab = "Fn(p)")
 abline(0,1, col = "red")
 abline(v = .05, col = "blue")
