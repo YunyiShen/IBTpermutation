@@ -15,10 +15,10 @@ for(i in 1:nrow(trait_dist2)){
 set.seed(12345)
 par(mfrow = c(1,2))
 perm_sample1 <- rho_permutation(qdh_spp_mat, trait_dist1, n = 3000)
-plot(density(perm_sample1$permutations))
+plot(density(perm_sample1$permutations), main = "body size", xlab = "beta")
 abline(v = perm_sample1$observed, col = "red")
 perm_sample2 <- rho_permutation(qdh_spp_mat, trait_dist2, n = 3000)
-plot(density(perm_sample2$permutations))
+plot(density(perm_sample2$permutations), main = "niche", xlab = "beta")
 abline(v = perm_sample2$observed, col = "red")
 
 perm_sample1$p
